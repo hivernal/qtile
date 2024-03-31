@@ -36,9 +36,11 @@ if qtile.core.name == "x11":
     terminal = "st tmux"
     app_launcher = "dmenu_run"
     script = os.path.expanduser("~/.config/qtile/scripts/xorg_autostart.sh")
+    screenshot = "flameshot gui"
 elif qtile.core.name == "wayland":
     terminal = "foot"
     app_launcher = "bemenu-run"
+    screenshot = os.path.expanduser("~/.config/qtile/scripts/screenshot.sh")
     script = os.path.expanduser("~/.config/qtile/scripts/wayland_autostart.sh")
 
 @hook.subscribe.startup_once
@@ -54,6 +56,9 @@ wl_input_rules = {
 }
 
 mod = "mod4"
+volume = os.path.expanduser("~/.config/qtile/scripts/volume.sh ")
+brightness = os.path.expanduser("~/.config/qtile/scripts/brightness.sh ")
+home = os.path.expanduser("~/")
 
 keys = [
     Key([mod], "l", lazy.layout.grow_main(), desc="Move focus to left"),
@@ -71,12 +76,15 @@ keys = [
     Key([mod], "f", lazy.window.toggle_floating(), desc="Toggle floating on the focused window"),
     Key([mod, "shift"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "shift"], "e", lazy.shutdown(), desc="Shutdown Qtile"),
+    Key([mod, "shift"], "q", lazy.spawn("systemctl poweroff"), desc="Shutdown Qtile"),
     Key([mod], "p", lazy.spawn(app_launcher), desc="Dmenu"),
-    Key([], "XF86AudioLowerVolume", lazy.spawn("/home/nikita/.config/qtile/scripts/volume.sh down")),
-    Key([], "XF86AudioRaiseVolume", lazy.spawn("/home/nikita/.config/qtile/scripts/volume.sh up")),
-    Key([], "XF86MonBrightnessUp", lazy.spawn("/home/nikita/.config/qtile/scripts/brightness.sh up")),
-    Key([], "XF86MonBrightnessDown", lazy.spawn("/home/nikita/.config/qtile/scripts/brightness.sh down")),
-    Key([], "XF86AudioMute", lazy.spawn("/home/nikita/.config/qtile/scripts/volume.sh mute")),
+    Key([], "XF86AudioRaiseVolume", lazy.spawn(volume + "up")),
+    Key([], "XF86AudioLowerVolume", lazy.spawn(volume + "down")),
+    Key([], "XF86AudioMute", lazy.spawn(volume + "mute")),
+    Key([], "XF86MonBrightnessUp", lazy.spawn(brightness + "up")),
+    Key([], "XF86MonBrightnessDown", lazy.spawn(brightness + "down")),
+    Key([mod], "s", lazy.spawn(screenshot)),
+    Key([], "Print", lazy.spawn(screenshot)),
     Key([mod], "space", lazy.widget["keyboardlayout"].next_keyboard(), desc="Next keyboard layout."),
 
 ]
@@ -141,7 +149,7 @@ screens = [
                                 this_screen_border="#5e5f67",
                                 this_current_screen_border="#5e5f67",
                                 margin_y=5, padding=10),
-                mywidgets.CurrentLayout(),
+                mywidgets.CurrentLayout(fmt="{} "),
                 widget.WindowName(max_chars=70),
                 widget.KeyboardLayout(configured_keyboards=["us", "ru"],
                                       display_map={"us": "us", "ru": "ru"},
