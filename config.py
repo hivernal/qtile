@@ -117,12 +117,13 @@ for i in groups:
 
 layouts = [
     layout.MonadTall(border_focus="#d2d9f8", border_normal="#5e5f67",
-                     border_width=3, ratio=0.55),
+                     border_width=3, ratio=0.55,
+                     new_client_position='before_current'),
     layout.Max(border_focus="#d2d9f8", border_normal="#5e5f67", border_width=3),
 ]
 
 widget_defaults = dict(
-    font="JetBrainsMono NF Bold",
+    font="JetBrainsMono Nerd Font ExtraBold",
     fontsize=16,
     background="#1a1b26",
     foreground="#d2d9f8",
@@ -151,8 +152,8 @@ screens = [
                                 margin_y=5, padding=10),
                 mywidgets.CurrentLayout(fmt="{} "),
                 widget.WindowName(max_chars=70),
-                widget.KeyboardLayout(configured_keyboards=["us", "ru"],
-                                      display_map={"us": "us", "ru": "ru"},
+                widget.KeyboardLayout(configured_keyboards=["us", "ru,us"],
+                                      display_map={"us": "us", "ru,us": "ru"},
                                       fmt="KEY {}"),
                 widget.TextBox(" | "),
                 widget.Volume(fmt="VOL {}", update_interval=1),
@@ -207,6 +208,8 @@ bring_front_click = False
 floats_kept_above = True
 cursor_warp = False
 floating_layout = layout.Floating(
+    border_focus="#d2d9f8", border_normal="#5e5f67",
+    border_width=3,
     float_rules=[
         # Run the utility of `xprop` to see the wm class and name of an X client.
         *layout.Floating.default_float_rules,
